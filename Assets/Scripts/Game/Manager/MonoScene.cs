@@ -114,5 +114,6 @@ public enum NameSceneEnum
 {
     Splash,
     Main,
+    HomeScene,
     Gameplay,
 }

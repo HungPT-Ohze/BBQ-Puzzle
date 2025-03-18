@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
 
     private async void Start()
     {
+        // Show Tittle screen
+
         // Inject service
         await UniTask.WaitUntil(() => GameService.Instance.IsInitialized);
 
@@ -39,5 +41,7 @@ public class GameManager : MonoBehaviour
         DataManager.Instance.Init();
         AppManager.Instance.Init();
 
+
+        // Hide Tittle screen
     }
 }
