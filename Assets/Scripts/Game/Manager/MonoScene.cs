@@ -73,20 +73,6 @@ public class MonoScene : MonoSingleton<MonoScene>
         }
     }
 
-    public void LoadMapScene(int id, Action onDone = null)
-    {
-        string key = $"Assets/Scenes/Map/Map_{id}/Map_{id}.unity";
-        mapHandle = Addressables.LoadSceneAsync(key, LoadSceneMode.Additive, activateOnLoad: true);
-        mapHandle.Completed += (op) =>
-        {
-            // Get the loaded scene instance
-            SceneInstance loadedScene = op.Result;
-
-            // Callback
-            onDone?.Invoke();
-        };
-    }
-
     public void LoadHomeScene(Action onDone = null)
     {
         string key = $"Assets/Scenes/Map/Home/Home.unity";
@@ -101,19 +87,12 @@ public class MonoScene : MonoSingleton<MonoScene>
         };
     }
 
-    public void RemoveMapScene()
-    {
-        if (mapHandle.IsValid())
-        {
-            Addressables.UnloadSceneAsync(mapHandle);
-        }
-    }
 }
 
 public enum NameSceneEnum
 {
     Splash,
     Main,
-    HomeScene,
+    Home,
     Gameplay,
 }

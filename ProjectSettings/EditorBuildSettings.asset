@@ -9,12 +9,13 @@ EditorBuildSettings:
     path: Assets/Scenes/Splash.unity
     guid: b29f9323fd53baf4daf17b7857c0b1f3
   - enabled: 0
-    path: Assets/Scenes/HomeScene.unity
+    path: Assets/Scenes/Home.unity
     guid: e363cdc0bf1907f46acba91e9492d6c6
-  - enabled: 0
-    path: Assets/Scenes/MainScene.unity
+  - enabled: 1
+    path: Assets/Scenes/Main.unity
     guid: 0c3c3ca7a95db0048acdd60894be97ea
   - enabled: 0
-    path: Assets/Scenes/GameScene.unity
+    path: Assets/Scenes/Gameplay.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: b697333fadf75dc4e85e833661214089, type: 2}
