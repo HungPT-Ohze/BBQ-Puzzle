@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-//using I2.Loc;
+using I2.Loc;
 using TMPro;
 using UnityEditor.SceneManagement;
 using com.homemade.save.core;
 
-#if UNITY_EDITOR && Test
+#if UNITY_EDITOR
 public class EditorTools : EditorWindow
 {
     [MenuItem("Tools/Show Tool", false, priority = 999)]
@@ -19,7 +19,6 @@ public class EditorTools : EditorWindow
     }
 
     private Vector2 scroll;
-    private Vector2 scrollMap;
 
     private void OnGUI()
     {
@@ -33,11 +32,6 @@ public class EditorTools : EditorWindow
         GUILayout.Space(15);
         GUILayout.Label("Scenes", EditorStyles.boldLabel);
         SceneInBuild();
-
-        // Maps
-        GUILayout.Space(5);
-        GUILayout.Label("Maps", EditorStyles.boldLabel);
-        MapsInGame();
     }
 
     private void SceneInBuild()
@@ -46,7 +40,7 @@ public class EditorTools : EditorWindow
         if (scenes.Length <= 0)
             return;
 
-        int col = 3;
+        int col = 2;
         int part = (int)(scenes.Length * 1.0f / col + 0.5f);
 
         int start = 0;
@@ -71,50 +65,6 @@ public class EditorTools : EditorWindow
                         continue;
                     EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
                     EditorSceneManager.OpenScene(scene.path);
-                }
-
-                GUILayout.EndVertical();
-
-                start = end;
-            }
-
-            GUILayout.EndHorizontal();
-        }
-        GUILayout.EndScrollView();
-    }
-
-    private void MapsInGame()
-    {
-        string path = "Assets/Scenes/Map";
-        var scenes = AssetDatabase.FindAssets("t:Scene", new[] { path });
-        if (scenes.Length <= 0)
-            return;
-
-        int col = 3;
-        int part = (int)(scenes.Length * 1.0f / col + 0.5f);
-
-        int start = 0;
-        int end = 0;
-
-        scroll = GUILayout.BeginScrollView(scroll);
-        {
-            GUILayout.BeginHorizontal("Box");
-
-            for (int i = 0; i < col; i++)
-            {
-                end = i == col - 1 ? scenes.Length : start + part;
-
-                GUILayout.BeginVertical("Box");
-
-                for (int j = start; j < end; j++)
-                {
-                    var scene = AssetDatabase.GUIDToAssetPath(scenes[j]);
-                    string[] names = scene.Split('/');
-
-                    if (!GUILayout.Button(names[names.Length - 1]))
-                        continue;
-                    EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
-                    EditorSceneManager.OpenScene(scene);
                 }
 
                 GUILayout.EndVertical();
