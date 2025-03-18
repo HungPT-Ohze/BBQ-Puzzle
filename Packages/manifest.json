@@ -6,6 +6,7 @@
     "com.homemade.pattern.observer": "1.0.1",
     "com.homemade.save.core": "1.0.2",
     "com.homemade.utils.asset-overwriter": "1.0.0",
+    "com.unity.addressables": "1.21.21",
     "com.unity.collab-proxy": "2.7.1",
     "com.unity.feature.2d": "2.0.0",
     "com.unity.ide.rider": "3.0.28",
