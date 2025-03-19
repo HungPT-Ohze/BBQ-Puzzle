@@ -27,7 +27,7 @@ MonoBehaviour:
     Google_SpreadsheetKey: 
     Google_SpreadsheetName: 
     Google_LastUpdatedVersion: 
-    Google_Password: change_this
+    Google_Password: ohze123
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2
     GoogleUpdateSynchronization: 1
