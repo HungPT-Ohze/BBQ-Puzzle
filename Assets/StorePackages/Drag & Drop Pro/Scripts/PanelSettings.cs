@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class PanelSettings : MonoBehaviour
 {
-	[HideInInspector]
+	//[HideInInspector]
 	public string ObjectId = "";
 
 	// Enums

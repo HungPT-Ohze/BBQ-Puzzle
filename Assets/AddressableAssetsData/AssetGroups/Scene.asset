@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: Scene
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
+  m_GroupName: Scene
   m_Data:
     m_SerializedData: []
   m_GUID: 2120fe329cfa27b44987cbd41e13c218
   m_SerializeEntries:
   - m_GUID: 2cda990e2423bbf4892e6590ba056729
-    m_Address: Assets/Scenes/GameScene.unity
+    m_Address: GameScene
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e363cdc0bf1907f46acba91e9492d6c6
-    m_Address: Assets/Scenes/HomeScene.unity
+    m_Address: HomeScene
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

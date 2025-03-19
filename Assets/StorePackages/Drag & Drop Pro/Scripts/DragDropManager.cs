@@ -16,10 +16,14 @@ public class DragDropManager : MonoBehaviour {
 	public static DragDropManager DDM;
 
 	// panels
+	[Header("List panel")]
 	public List<PanelSettings> AllPanels;
 	// objects
+	[Header("List object")]
 	public List<ObjectSettings> AllObjects;
+
 	// canvases
+	[Header("Canvas holder")]
 	public Canvas FirstCanvas;
 	public Canvas SecondCanvas;
 
@@ -33,7 +37,7 @@ public class DragDropManager : MonoBehaviour {
 	public UnityEvent BeforeSetup;
 	public UnityEvent AfterSetup;
 
-	void Start () {
+	public void Setup () {
 		UnityEngine.InputSystem.EnhancedTouch.EnhancedTouchSupport.Enable();
 
 		// Getting current DDM GameObject
