@@ -4,7 +4,7 @@ public class Slot : MonoBehaviour
 {
     [Header("Info")]
     [SerializeField] private int slotIndex;
-    [SerializeField] private SlotStatus status;
+    [SerializeField] private bool isLastSlot;
 
     [Header("Component")]
     [SerializeField] private PanelSettings panelSettings;
@@ -12,6 +12,7 @@ public class Slot : MonoBehaviour
     private Container container;
 
     public PanelSettings PanelSettings => panelSettings;
+    public bool IsLastSlot => isLastSlot;
 
     public void Set(Container container)
     {
@@ -19,11 +20,19 @@ public class Slot : MonoBehaviour
         string id = $"Slot_{container.Id}_{slotIndex}";
         panelSettings.Id = id;
         this.gameObject.name = id;
+
+        panelSettings.OnObjectDropped.AddListener(OnObjectDropped);
+        panelSettings.OnObjectExit.AddListener(OnObjectExit);
+    }
+
+    public bool IsHasItem()
+    {
+        return !string.IsNullOrEmpty(panelSettings.ObjectId);
     }
 
     public Item GetItem()
     {
-        if(string.IsNullOrEmpty(panelSettings.ObjectId))
+        if(!IsHasItem())
         {
             return null;
         }
@@ -32,4 +41,13 @@ public class Slot : MonoBehaviour
         return obj.GetComponent<Item>();
     }
 
+    public void OnObjectDropped()
+    {
+        
+    }
+
+    public void OnObjectExit()
+    {
+        
+    }
 }

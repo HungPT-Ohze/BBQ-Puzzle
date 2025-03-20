@@ -5,8 +5,6 @@ using UnityEngine;
 public class GamePlay : MonoSingleton<GamePlay>
 {
     [Header("Component")]
-    public LevelManager levelManager;
-    public ContainerManager containerManager;
     public DragDropManager dragDropManager;
 
     // Private variables
@@ -22,21 +20,6 @@ public class GamePlay : MonoSingleton<GamePlay>
 #endif
 
         // Start game
-        CreateGamePlay();
     }
 
-    public async void CreateGamePlay()
-    {
-        isDoneCreateGamePlay = false;
-        containerManager.Setup();
-        await UniTask.DelayFrame(1);
-
-        containerManager.AddToDragDropManager();
-        await UniTask.DelayFrame(1);
-
-        dragDropManager.Setup();
-        await UniTask.DelayFrame(1);
-
-        isDoneCreateGamePlay = true;
-    }
 }

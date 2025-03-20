@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotIndex: 1
-  status: 0
+  isLastSlot: 0
   panelSettings: {fileID: 1970459904854271956}
 --- !u!114 &1970459904854271956
 MonoBehaviour:
@@ -109,7 +109,7 @@ MonoBehaviour:
   Ignore: 0
   ObjectPosition: 0
   LockObject: 0
-  ObjectReplacement: 0
+  ObjectReplacement: 1
   OnObjectDropped:
     m_PersistentCalls:
       m_Calls:
@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotIndex: 0
-  status: 0
+  isLastSlot: 0
   panelSettings: {fileID: 8479062376056655086}
 --- !u!114 &8479062376056655086
 MonoBehaviour:
@@ -238,7 +238,7 @@ MonoBehaviour:
   Ignore: 0
   ObjectPosition: 0
   LockObject: 0
-  ObjectReplacement: 0
+  ObjectReplacement: 1
   OnObjectDropped:
     m_PersistentCalls:
       m_Calls:
@@ -444,7 +444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotIndex: 2
-  status: 0
+  isLastSlot: 1
   panelSettings: {fileID: 5385328575519164708}
 --- !u!114 &5385328575519164708
 MonoBehaviour:
@@ -463,7 +463,7 @@ MonoBehaviour:
   Ignore: 0
   ObjectPosition: 0
   LockObject: 0
-  ObjectReplacement: 0
+  ObjectReplacement: 1
   OnObjectDropped:
     m_PersistentCalls:
       m_Calls:

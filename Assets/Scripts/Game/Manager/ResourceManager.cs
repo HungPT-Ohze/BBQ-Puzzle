@@ -12,6 +12,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     private Dictionary<string, SpriteAtlas> dicAtlas = new Dictionary<string, SpriteAtlas>();
     private Dictionary<string, TMP_SpriteAsset> dicSpriteAssets = new Dictionary<string, TMP_SpriteAsset>();
 
+    private Dictionary<string, Item> dicItem = new Dictionary<string, Item>();
 
     public void Clear()
     {
@@ -85,4 +86,8 @@ public class ResourceManager : MonoSingleton<ResourceManager>
         return Load(path, dicGameObject, save);
     }
 
+    public Item LoadItem(int id, bool save = true)
+    {
+        return Load($"Object/Item/Item {id}", dicItem, save);
+    }
 }
