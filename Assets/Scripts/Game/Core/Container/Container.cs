@@ -10,14 +10,25 @@ public class Container : MonoBehaviour
     [Header("Slot")]
     [SerializeField] private List<Slot> slots = new List<Slot>();
 
+    [Header("Tray")]
+    [SerializeField] private List<Tray> trays = new List<Tray>();
+
     public int Id => id;
     public List<Slot> Slots => slots;
+    public List<Tray> Trays => trays;
 
     public void Set()
     {
+        // Main slots
         foreach (Slot slot in slots)
         {
             slot.Set(this);
+        }
+
+        // Tray
+        foreach (Tray tray in trays)
+        {
+            tray.Set(this);
         }
 
         this.gameObject.name = $"Container_{id}";
@@ -45,11 +56,10 @@ public class Container : MonoBehaviour
 
     public void OnItemDropped()
     {
-        bool check = CheckAllSlot();
+        bool isFull = CheckAllSlot();
 
-        if(check)
-        {
-            Debug.Log("OKe");
-        }
+        if (!isFull) return;
+
+        Debug.Log("Oke");
     }
 }

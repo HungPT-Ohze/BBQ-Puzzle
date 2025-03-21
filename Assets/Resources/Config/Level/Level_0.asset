@@ -13,12 +13,20 @@ MonoBehaviour:
   m_Name: Level_0
   m_EditorClassIdentifier: 
   levelID: 0
-  data:
-  - itemType: 0
+  amountSlot: 18
+  skipSlotWeight:
+  - skip: 1
+    percent: 70
+  - skip: 2
+    percent: 20
+  - skip: 3
+    percent: 10
+  itemInGame:
+  - Type: 0
     amount: 6
-  - itemType: 1
+  - Type: 1
     amount: 3
-  - itemType: 2
+  - Type: 2
     amount: 3
   showMessage: 1
   checkMessage: Okela!

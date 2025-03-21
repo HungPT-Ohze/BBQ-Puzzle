@@ -10,19 +10,30 @@ public class Slot : MonoBehaviour
     [SerializeField] private PanelSettings panelSettings;
 
     private Container container;
+    private Tray tray;
 
     public PanelSettings PanelSettings => panelSettings;
     public bool IsLastSlot => isLastSlot;
 
+    // Setup in container
     public void Set(Container container)
     {
         this.container = container;
-        string id = $"Slot_{container.Id}_{slotIndex}";
+        string id = $"Slot_Con_{container.Id}_{slotIndex}";
         panelSettings.Id = id;
         this.gameObject.name = id;
 
         panelSettings.OnObjectDropped.AddListener(OnObjectDropped);
         panelSettings.OnObjectExit.AddListener(OnObjectExit);
+    }
+
+    // Setup in tray
+    public void Set(Tray tray)
+    {
+        this.tray = tray;
+        string id = $"Slot_Con_{tray.ContainerId}_Tray_{tray.Id}_{slotIndex}";
+        panelSettings.Id = id;
+        this.gameObject.name = id;
     }
 
     public bool IsHasItem()
@@ -37,7 +48,7 @@ public class Slot : MonoBehaviour
             return null;
         }
 
-        ObjectSettings obj = GamePlay.Instance.dragDropManager.AllObjects.Find(i => i.Id == panelSettings.ObjectId);
+        ObjectSettings obj = GamePlay.DragDropManager.AllObjects.Find(i => i.Id == panelSettings.ObjectId);
         return obj.GetComponent<Item>();
     }
 

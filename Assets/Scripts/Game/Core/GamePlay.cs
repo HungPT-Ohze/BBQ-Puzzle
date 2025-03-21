@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class GamePlay : MonoSingleton<GamePlay>
 {
-    [Header("Component")]
-    public DragDropManager dragDropManager;
+    [Header("Manager")]
+    [SerializeField] private DragDropManager dragDropManager;
+    [SerializeField] private LevelManager levelManager;
 
-    // Private variables
-    private bool isDoneCreateGamePlay = false;
-    public bool IsDoneCreateGamePlay => isDoneCreateGamePlay;
+    [Header("Component")]
+    [SerializeField] private GameObject eventSysObj;
+
+    // Public static
+    public static DragDropManager DragDropManager => Instance.dragDropManager;
+    public static LevelManager LevelManager => Instance.levelManager;
+    
 
     private void Start()
     {
@@ -22,4 +27,8 @@ public class GamePlay : MonoSingleton<GamePlay>
         // Start game
     }
 
+    public void Setup()
+    {
+        eventSysObj.SetActive(false);
+    }
 }

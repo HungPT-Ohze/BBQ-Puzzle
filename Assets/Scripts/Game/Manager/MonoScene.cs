@@ -2,7 +2,6 @@ using com.homemade.pattern.singleton;
 using System;
 using UnityEngine;
 using System.Collections;
-using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
@@ -45,16 +44,40 @@ public class MonoScene : MonoSingleton<MonoScene>
         onDone?.Invoke();
     }
 
-    public void RemoveGameScene()
+    public void LoadHomeScene(Action onDone = null)
+    {
+        // Start a coroutine to handle the loading process and setting active scene
+        StartCoroutine(LoadHomeSceneIEnum(onDone));
+    }
+
+    private IEnumerator LoadHomeSceneIEnum(Action onDone)
+    {
+        string name = NameSceneEnum.Home.ToString();
+
+        // Load the scene asynchronously
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name, LoadSceneMode.Additive);
+
+        // Wait until the asynchronous scene is fully loaded
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        SetActiveScene(NameSceneEnum.Home);
+
+        onDone?.Invoke();
+    }
+
+    public void RemoveScene(NameSceneEnum sceneEnum)
     {
         SetActiveScene(NameSceneEnum.Main);
 
-        string gameSceneName = NameSceneEnum.Gameplay.ToString();
-        Scene gameScene = SceneManager.GetSceneByName(gameSceneName);
+        string sceneName = sceneEnum.ToString();
+        Scene scene = SceneManager.GetSceneByName(sceneName);
 
-        if (gameScene.IsValid())
+        if (scene.IsValid())
         {
-            SceneManager.UnloadSceneAsync(gameScene);
+            SceneManager.UnloadSceneAsync(scene);
         }
     }
 
@@ -72,21 +95,6 @@ public class MonoScene : MonoSingleton<MonoScene>
             Debug.LogError("Scene not valid or not loaded: " + scene);
         }
     }
-
-    public void LoadHomeScene(Action onDone = null)
-    {
-        string key = $"Assets/Scenes/Map/Home/Home.unity";
-        mapHandle = Addressables.LoadSceneAsync(key, LoadSceneMode.Additive, activateOnLoad: true);
-        mapHandle.Completed += (op) =>
-        {
-            // Get the loaded scene instance
-            SceneInstance loadedScene = op.Result;
-
-            // Callback
-            onDone?.Invoke();
-        };
-    }
-
 }
 
 public enum NameSceneEnum

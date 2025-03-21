@@ -1,41 +1,75 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [CreateAssetMenu(fileName = "LevelData", menuName = "Config/Level", order = 2)]
 public class LevelSO : ScriptableObject
 {
     [Header("Info")]
     public int levelID;
+    public int amountSlot;
 
-    [Header("List data")]
-    public List<LevelData> data;
+    [Header("Weight skip slot")]
+    public List<SkipSlotWeight> skipSlotWeight;
+
+    [Header("List item")]
+    public List<LevelItem> itemInGame;
 
     [Title("Tool")]
     [Button("Check is data correct")]
-    private void CheckData()
+    private void OnClickCheck()
     {
-        isNotCorrect = false;
+        bool checkItem = CheckForItem();
+        bool checkItemNotInSlot = CheckForItemNotInSlot();
 
-        // Check for duplicate
-        HashSet<ItemType> set = new HashSet<ItemType>();
-
-        foreach (var level in data)
-        {
-            if(!set.Add(level.itemType))
-            {
-                isNotCorrect = true;
-                break;
-            }
-        }
+        isDataCorrect = checkItem && checkItemNotInSlot;
 
         checkMessage = CheckMessageInfo();
     }
 
+    private bool CheckForItem()
+    {
+        HashSet<ItemType> set = new HashSet<ItemType>();
+
+        foreach (var item in itemInGame)
+        {
+            // Check for duplicate
+            if (!set.Add(item.Type))
+            {
+                return false;
+            }
+
+            // Check for amount
+            if (!(item.amount % 3 == 0))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private bool CheckForItemNotInSlot()
+    {
+        skipSlotWeight.Sort();
+
+        int largestSkip = skipSlotWeight[skipSlotWeight.Count - 1].skip;
+        int amountItem = 0;
+
+        foreach (var item in itemInGame)
+        {
+            amountItem += item.amount;
+        }
+
+        bool check = (amountSlot - amountItem) / largestSkip >= 2;
+
+        return check;
+    }
+
     [Title("Message")]
     public bool showMessage = true;
-    private bool isNotCorrect;
+    private bool isDataCorrect;
 
     [ShowIf("showMessage")]
     [GUIColor("GetMessageColor")]
@@ -49,25 +83,38 @@ public class LevelSO : ScriptableObject
 
     private Color GetMessageColor()
     {
-        return isNotCorrect ? Color.red : Color.green;
+        return isDataCorrect ? Color.green : Color.red;
     }
 
     private string CheckMessageInfo()
     {
-        if(isNotCorrect)
-        {
-            return "You need to check again the data";
-        }
-        else
+        if(isDataCorrect)
         {
             return "Okela!";
         }
+        else
+        {
+            return "You need to check again the data";
+        }
     }
+
 }
 
-[System.Serializable]
-public class LevelData
+[Serializable]
+public class LevelItem
 {
-    public ItemType itemType;
+    public ItemType Type;
     public int amount;
+}
+
+[Serializable]
+public class SkipSlotWeight : IComparable<SkipSlotWeight>
+{
+    [MinValue(1)] public int skip;
+    [MinValue(0)][MaxValue(100)] public int percent;
+
+    public int CompareTo(SkipSlotWeight other)
+    {
+        return skip.CompareTo(other.skip);
+    }
 }

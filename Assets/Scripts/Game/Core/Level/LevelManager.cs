@@ -4,5 +4,12 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    
+    [Header("Component")]
+    [SerializeField] private Transform levelHolder;
+
+    public void CreateLevel()
+    {
+
+    }
+
 }

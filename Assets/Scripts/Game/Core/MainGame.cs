@@ -1,18 +1,17 @@
+using com.homemade.pattern.singleton;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainGame : MonoBehaviour
+public class MainGame : MonoSingleton<MainGame>
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        MonoScene.Instance.LoadGameScene(OnLoadGameDone);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnLoadGameDone()
     {
-        
+        GamePlay.Instance.Setup();
     }
 }

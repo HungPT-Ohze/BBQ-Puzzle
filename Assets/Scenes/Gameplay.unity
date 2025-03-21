@@ -201,7 +201,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2694412529588444174, guid: f0eb60fc695d58145950a251a1784041, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 179.86
+      value: 260
       objectReference: {fileID: 0}
     - target: {fileID: 2694412529588444174, guid: f0eb60fc695d58145950a251a1784041, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -351,6 +351,7 @@ GameObject:
   m_Component:
   - component: {fileID: 754715291}
   - component: {fileID: 754715290}
+  - component: {fileID: 754715292}
   m_Layer: 0
   m_Name: GamePlay
   m_TagString: Untagged
@@ -371,6 +372,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragDropManager: {fileID: 1413894731}
+  levelManager: {fileID: 754715292}
+  eventSysObj: {fileID: 1213113063}
 --- !u!4 &754715291
 Transform:
   m_ObjectHideFlags: 0
@@ -388,6 +391,19 @@ Transform:
   - {fileID: 1413894729}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &754715292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754715288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4a3af5a34476db4292ae4e608b82a35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelHolder: {fileID: 1374352599}
 --- !u!1001 &811223410
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -466,7 +482,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2694412529588444174, guid: f0eb60fc695d58145950a251a1784041, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 179.86
+      value: 260
       objectReference: {fileID: 0}
     - target: {fileID: 2694412529588444174, guid: f0eb60fc695d58145950a251a1784041, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1068,7 +1084,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2138769129}
   - component: {fileID: 2138769128}
-  - component: {fileID: 2138769127}
   m_Layer: 0
   m_Name: Game Camera
   m_TagString: Untagged
@@ -1076,14 +1091,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &2138769127
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2138769126}
-  m_Enabled: 1
 --- !u!20 &2138769128
 Camera:
   m_ObjectHideFlags: 0
@@ -1228,7 +1235,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2694412529588444174, guid: f0eb60fc695d58145950a251a1784041, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 179.86
+      value: 260
       objectReference: {fileID: 0}
     - target: {fileID: 2694412529588444174, guid: f0eb60fc695d58145950a251a1784041, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

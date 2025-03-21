@@ -27,31 +27,31 @@ public class LevelController : MonoBehaviour
     {
         // Init
         Init();
-        await UniTask.DelayFrame(1);
 
         // Container
+        await UniTask.DelayFrame(1);
         AddContainerToDragDropManager();
         await UniTask.DelayFrame(1);
-
         SetupContainers();
-        await UniTask.DelayFrame(1);
 
         // Item
+        await UniTask.DelayFrame(1);
         CreateItem();
         await UniTask.DelayFrame(3);
         AddItemToDragDropManager();
-        await UniTask.DelayFrame(1);
 
         // Drag drop setup
+        await UniTask.DelayFrame(1);
         dragDropManager.Setup();
-        await UniTask.DelayFrame(5);
 
+        // Create level
+        await UniTask.WaitForSeconds(0.25f);
         RandomGenerateLevel();
     }
 
     public void Init()
     {
-        dragDropManager = GamePlay.Instance.dragDropManager;
+        dragDropManager = GamePlay.DragDropManager;
     }
 
     #region Container
@@ -69,10 +69,21 @@ public class LevelController : MonoBehaviour
 
         foreach (var container in containers)
         {
+            // Main slot
             foreach (var slot in container.Slots)
             {
                 PanelSettings panelSettings = slot.GetComponent<PanelSettings>();
                 dragDropManager.AllPanels.Add(panelSettings);
+            }
+
+            // Add slot of tray
+            foreach (var tray in container.Trays)
+            {
+                foreach(var slot in tray.Slots)
+                {
+                    PanelSettings panelSettings = slot.GetComponent<PanelSettings>();
+                    dragDropManager.AllPanels.Add(panelSettings);
+                }
             }
         }
     }
@@ -84,11 +95,11 @@ public class LevelController : MonoBehaviour
     {
         int id = 0;
 
-        foreach(var data in config.data)
+        foreach(var itemData in config.itemInGame)
         {
-            Item item = ResourceManager.Instance.LoadItem((int) data.itemType);
+            Item item = ResourceManager.Instance.LoadItem((int) itemData.Type);
 
-            for(int i = 0; i < data.amount; i++)
+            for(int i = 0; i < itemData.amount; i++)
             {
                 var obj = LeanPool.Spawn(item, itemHolder);
                 itemsInGame.Add(obj);
@@ -123,12 +134,13 @@ public class LevelController : MonoBehaviour
         List<Item> shuffledItems = Utils.ListShuffled(itemsInGame);
 
         // Create list skip slot based on percent
-        var skipSlots = new List<Tuple<int, int>>
+        var skipSlots = new List<Tuple<int, int>>();
+
+        foreach(var weight in config.skipSlotWeight)
         {
-            Tuple.Create(1, 70), // 70% chance
-            Tuple.Create(2, 20), // 20% chance
-            Tuple.Create(3, 10)  // 10% chance
-        };
+            var choice = new Tuple<int, int>(weight.skip, weight.percent);
+            skipSlots.Add(choice);
+        }
 
         // Move item to slot
         int indexItem = 0;
@@ -137,7 +149,7 @@ public class LevelController : MonoBehaviour
         {
             Slot currentSlot = slotsNotFill[indexSlot].GetComponent<Slot>();
 
-            if (indexSlot >= shuffledItems.Count) break;
+            if (indexItem >= shuffledItems.Count) break;
 
             Item currentItem = shuffledItems[indexItem];
 
@@ -149,7 +161,6 @@ public class LevelController : MonoBehaviour
 
                 if(slot_1.IsHasItem() && slot_2.IsHasItem())
                 {
-                    int tmpIndexItem = indexItem;
                     Item itemSlot_1 = slot_1.GetItem();
                     Item itemSlot_2 = slot_2.GetItem();
 
@@ -162,9 +173,8 @@ public class LevelController : MonoBehaviour
             }
 
             AIDragDrop.DragDrop(currentItem.ObjectSettings.Id, currentSlot.PanelSettings.Id, true);
-
             indexItem++;
         }
     }
-    
+
 }

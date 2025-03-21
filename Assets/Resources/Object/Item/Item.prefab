@@ -112,7 +112,7 @@ MonoBehaviour:
   Id: 
   UserControl: 1
   ReturnSmoothly: 1
-  ReturnSpeed: 1
+  ReturnSpeed: 2
   ScaleOnDrag: 0
   DragScale: {x: 1, y: 1, z: 1}
   StayDroppedPos: 0
