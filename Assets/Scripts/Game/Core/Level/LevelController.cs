@@ -29,6 +29,8 @@ public class LevelController : MonoBehaviour
     // Private variable
     private DragDropManager dragDropManager;
 
+    public LevelSO Config => config;
+
     private async void Start()
     {
         // Init

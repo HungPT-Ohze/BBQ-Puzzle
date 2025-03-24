@@ -10,6 +10,9 @@ public class LevelSO : ScriptableObject
     public int levelID;
     public int amountSlot;
 
+    [Header("Time in gameplay")]
+    public float timePlay;
+
     [Header("Weight skip slot")]
     public List<SkipSlotWeight> skipSlotWeight;
 
