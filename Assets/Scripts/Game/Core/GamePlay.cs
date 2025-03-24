@@ -1,3 +1,4 @@
+using com.homemade.pattern.observer;
 using com.homemade.pattern.singleton;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class GamePlay : MonoSingleton<GamePlay>
 
     private void Start()
     {
+        // To detect platforms
 #if UNITY_EDITOR
         dragDropManager.TargetPlatform = DragDropManager.Platforms.PC;
 #elif UNITY_ANDROID || UNITY_IOS
@@ -29,10 +31,33 @@ public class GamePlay : MonoSingleton<GamePlay>
 #endif
 
         // Start game
+        StartGame();
     }
 
     public void Setup()
     {
         eventSysObj.SetActive(false);
+    }
+
+    public void StartGame()
+    {
+        levelManager.CreateLevel();
+
+        this.PostEvent(EventID.StartGame);
+    }
+
+    public void PauseGame()
+    {
+
+    }
+
+    public void EndGame()
+    {
+
+    }
+
+    public void ResetGamePlay()
+    {
+        levelManager.ResetLevel();
     }
 }
