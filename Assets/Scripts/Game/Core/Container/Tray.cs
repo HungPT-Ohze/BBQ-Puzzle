@@ -25,4 +25,16 @@ public class Tray : MonoBehaviour
         }
     }
 
+    public bool IsHasItem()
+    {
+        foreach(Slot slot in slots)
+        {
+            if(slot.IsHasItem())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

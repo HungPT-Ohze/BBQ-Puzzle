@@ -14,7 +14,11 @@ public class GamePlay : MonoSingleton<GamePlay>
     // Public static
     public static DragDropManager DragDropManager => Instance.dragDropManager;
     public static LevelManager LevelManager => Instance.levelManager;
-    
+
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+    }
 
     private void Start()
     {

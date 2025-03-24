@@ -20,6 +20,12 @@ public class LevelController : MonoBehaviour
     [Header("List item")]
     [ShowInInspector] private List<Item> itemsInGame = new List<Item>();
 
+    [Title("List of slot")]
+    [Title("Main slot", horizontalLine: false)]
+    [ShowInInspector] private List<Slot> mainSlots = new List<Slot>();
+    [Title("Support slot")]
+    [ShowInInspector] private List<Slot> supportSlots = new List<Slot>();
+
     // Private variable
     private DragDropManager dragDropManager;
 
@@ -33,6 +39,8 @@ public class LevelController : MonoBehaviour
         AddContainerToDragDropManager();
         await UniTask.DelayFrame(1);
         SetupContainers();
+        await UniTask.DelayFrame(1);
+        CreateListOfSlot();
 
         // Item
         await UniTask.DelayFrame(1);
@@ -45,8 +53,18 @@ public class LevelController : MonoBehaviour
         dragDropManager.Setup();
 
         // Create level
-        await UniTask.WaitForSeconds(0.25f);
+        await UniTask.DelayFrame(1);
         RandomGenerateLevel();
+        await UniTask.WaitForSeconds(0.1f);
+        SetTrayBehaviour();
+
+        // Check level
+        await UniTask.DelayFrame(2);
+        while (!CheckLevel())
+        {
+            UniTask resetTask = ResetLevel();
+            await UniTask.WhenAll(resetTask);
+        }
     }
 
     public void Init()
@@ -60,6 +78,14 @@ public class LevelController : MonoBehaviour
         foreach (var container in containers)
         {
             container.Set();
+        }
+    }
+
+    private void ReInitContainers()
+    {
+        foreach (var container in containers)
+        {
+            container.ReInit();
         }
     }
 
@@ -102,7 +128,11 @@ public class LevelController : MonoBehaviour
             for(int i = 0; i < itemData.amount; i++)
             {
                 var obj = LeanPool.Spawn(item, itemHolder);
-                itemsInGame.Add(obj);
+
+                if(!itemsInGame.Contains(obj))
+                {
+                    itemsInGame.Add(obj);
+                }
 
                 obj.Set(id);
                 id++;
@@ -121,22 +151,49 @@ public class LevelController : MonoBehaviour
 
     #endregion
 
+    private void CreateListOfSlot()
+    {
+        // Main slot
+        foreach(var container in containers)
+        {
+            mainSlots.AddRange(container.Slots);
+
+            foreach(var tray in container.Trays)
+            {
+                supportSlots.AddRange(tray.Slots);
+            }
+        }
+    }
+
     private void RandomGenerateLevel()
     {
-        // Create slot list
-        List<Slot> slotsNotFill = new List<Slot>();
-        foreach(var panel in dragDropManager.AllPanels)
+        // Shuffed list item
+        List<Item> shuffledItems = new List<Item>(); 
+        shuffledItems.AddRange(itemsInGame);
+        shuffledItems = Utils.ListShuffled(shuffledItems);
+
+        // Move item to main slots
+        FillItemToSlot(mainSlots, shuffledItems);
+
+        // Remove the item in main slot
+        List<Item> itemsNotInMainSlot = new List<Item>();
+
+        foreach(var slot in mainSlots)
         {
-            slotsNotFill.Add(panel.GetComponent<Slot>());
+            Item item = shuffledItems.Find(i => i.ObjectSettings.Id == slot.PanelSettings.ObjectId);
+            shuffledItems.Remove(item);
         }
 
-        // Shuffed list item
-        List<Item> shuffledItems = Utils.ListShuffled(itemsInGame);
+        // Move item to support slots
+        FillItemToSlot(supportSlots, shuffledItems);
+    }
 
+    private void FillItemToSlot(List<Slot> slots, List<Item> items)
+    {
         // Create list skip slot based on percent
         var skipSlots = new List<Tuple<int, int>>();
 
-        foreach(var weight in config.skipSlotWeight)
+        foreach (var weight in config.skipSlotWeight)
         {
             var choice = new Tuple<int, int>(weight.skip, weight.percent);
             skipSlots.Add(choice);
@@ -145,19 +202,20 @@ public class LevelController : MonoBehaviour
         // Move item to slot
         int indexItem = 0;
 
-        for (int indexSlot = 0; indexSlot < slotsNotFill.Count; indexSlot += Utils.WeightedRandom(skipSlots))
+        for (int indexSlot = 0; indexSlot < slots.Count; indexSlot += Utils.WeightedRandom(skipSlots))
         {
-            Slot currentSlot = slotsNotFill[indexSlot].GetComponent<Slot>();
+            Slot currentSlot = slots[indexSlot].GetComponent<Slot>();
 
-            if (indexItem >= shuffledItems.Count) break;
+            if (indexItem >= items.Count) break;
+            if (currentSlot.IsHasItem()) continue;
 
-            Item currentItem = shuffledItems[indexItem];
+            Item currentItem = items[indexItem];
 
             // Check if container filled by the last slot
             if (currentSlot.IsLastSlot)
             {
-                Slot slot_1 = slotsNotFill[indexSlot - 2];
-                Slot slot_2 = slotsNotFill[indexSlot - 1];
+                Slot slot_1 = slots[indexSlot - 2];
+                Slot slot_2 = slots[indexSlot - 1];
 
                 if(slot_1.IsHasItem() && slot_2.IsHasItem())
                 {
@@ -177,4 +235,126 @@ public class LevelController : MonoBehaviour
         }
     }
 
+    private void SetIgnoreAllTray(bool isIgnore)
+    {
+        foreach (var slot in supportSlots)
+        {
+            slot.PanelSettings.Ignore = isIgnore;
+            slot.PanelSettings.LockObject = PanelSettings.ObjectLockStates.LockObject;
+        }
+    }
+
+    private void SetTrayBehaviour()
+    {
+        // Tray can not drop item
+        SetIgnoreAllTray(true);
+
+        // Tray have item check
+        foreach (var container in containers)
+        {
+            foreach (var tray in container.Trays)
+            {
+                bool isHasItem = tray.IsHasItem();
+                tray.gameObject.SetActive(isHasItem);
+            }
+        }
+    }
+
+    private void OpenAllTray()
+    {
+        foreach (var container in containers)
+        {
+            foreach (var tray in container.Trays)
+            {
+                tray.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    private void ActiveAllItem()
+    {
+        foreach(var item in itemsInGame)
+        {
+            item.gameObject.SetActive(true);
+        }
+    }
+
+    #region Reset Level
+    [Title("Tool")]
+    [Button]
+    public async void ResetGamePlay()
+    {
+        do
+        {
+            UniTask resetTask = ResetLevel();
+            await UniTask.WhenAll(resetTask);
+        }
+        while (!CheckLevel());
+    }
+
+    private async UniTask ResetLevel()
+    {
+        // Reset
+        ActiveAllItem();
+        await UniTask.DelayFrame(1);
+
+        // Manager
+        dragDropManager.AllObjects.Clear();
+        AddItemToDragDropManager();
+        await UniTask.DelayFrame(1);
+        DragDropManager.ResetScene();
+
+        // Container
+        await UniTask.DelayFrame(1);
+        ReInitContainers();
+        await UniTask.DelayFrame(1);
+        OpenAllTray();
+        SetIgnoreAllTray(false);
+
+        // Drag drop setup
+        await UniTask.DelayFrame(1);
+
+        // Create level
+        await UniTask.DelayFrame(1);
+        RandomGenerateLevel();
+        await UniTask.WaitForSeconds(0.1f);
+        SetTrayBehaviour();
+
+        await UniTask.CompletedTask;
+    }
+
+    private bool CheckLevel()
+    {
+        int numberItemInSlot = 0;
+
+        foreach(var slot in mainSlots)
+        {
+            if(slot.IsHasItem())
+            {
+                numberItemInSlot += 1;
+            }
+        }
+
+        if(numberItemInSlot == mainSlots.Count)
+        {
+            return false;
+        }
+
+        foreach (var slot in supportSlots)
+        {
+            if (slot.IsHasItem())
+            {
+                numberItemInSlot += 1;
+            }
+        }
+
+        if(numberItemInSlot < itemsInGame.Count)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    #endregion
 }
