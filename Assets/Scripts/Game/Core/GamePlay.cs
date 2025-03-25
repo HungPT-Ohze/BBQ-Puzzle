@@ -16,6 +16,10 @@ public class GamePlay : MonoSingleton<GamePlay>
     public static DragDropManager DragDropManager => Instance.dragDropManager;
     public static LevelManager LevelManager => Instance.levelManager;
 
+    // Tick
+    public readonly string GamePlay_Tick_ID = "GamePlay";
+    private TickSystem tickGamePlay;
+
     private void Awake()
     {
         Application.targetFrameRate = 60;
@@ -36,12 +40,18 @@ public class GamePlay : MonoSingleton<GamePlay>
 
     public void Setup()
     {
+        // Set game
         eventSysObj.SetActive(false);
+
+        // Create tick
+        tickGamePlay = TickManager.Instance.CreateTickSystem(GamePlay_Tick_ID, 1f, false);
     }
 
     public void StartGame()
     {
         levelManager.CreateLevel();
+
+        tickGamePlay.ResumeTick();
 
         this.PostEvent(EventID.StartGame);
     }

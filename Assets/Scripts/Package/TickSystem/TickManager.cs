@@ -6,19 +6,25 @@ public class TickManager : MonoSingleton<TickManager>
 {
     private Dictionary<string, TickSystem> tickSystems = new Dictionary<string, TickSystem>();
 
-    public void CreateTickSystem(string id, float tickRate)
+    public TickSystem CreateTickSystem(string id, float tickRate, bool startImmediately = true)
     {
         if (tickSystems.ContainsKey(id))
         {
             Debug.LogWarning($"Tick System with ID {id} already exists.");
-            return;
+            return tickSystems[id];
         }
 
         GameObject tickObject = new GameObject($"TickSystem_{id}");
         tickObject.transform.SetParent(transform);
         TickSystem newTickSystem = tickObject.AddComponent<TickSystem>();
-        newTickSystem.StartTicking(tickRate);
-        tickSystems[id] = newTickSystem;
+        tickSystems.Add(id, newTickSystem);
+
+        if(startImmediately)
+        {
+            tickSystems[id].StartTicking(tickRate);
+        }
+
+        return tickSystems[id];
     }
 
     public void RemoveTickSystem(string id)
